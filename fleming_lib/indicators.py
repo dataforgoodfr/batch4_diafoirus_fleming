@@ -16,18 +16,99 @@ import pandas as pd
 import numpy as np
 
 
-def compute_igs2_score():
+def compute_igs2_score(age,heart_rate,systolic_bp,temp,glasgow_coma_score,PaO2DivFIO2):
     """
+    
+    NOT FINISHED YET!
+    
     Compute the IGS-II score
 
     Args:
-        arg1 (type): description
+        Use the worst value for each physiological variable 
+        within the past 24 hours.
+        
+        age (int): Years
+        heart_rate (int): BPM
+        systolic_bp (int): mmHg
+        temp (int): °C
+        glasgow_coma_score (int): 
+        PaO2DivFIO2 (int) : mmHg
 
     Returns:
         ret1 (type): description
     """
+    
+    igs2_score = 0 
+    # Age (Years)
+    if (age<40): 
+        igs2_score+=0
+    elif (age<=59) :
+        igs2_score+=7
+    elif (age<=69) :
+        igs2_score+=12
+    elif (age<=74) :
+        igs2_score+=15
+    elif (age<=79) :
+        igs2_score+=16
+    else:
+        igs2_score+=18
+        
+    # Vitals   
+    # Heart Rate
+    if (heart_rate<40):  # heart_rate = 0 if cardiac arrest within past 24h
+        igs2_score+=11
+    elif (heart_rate<=69) :
+        igs2_score+=2
+    elif (heart_rate<=119) :
+        igs2_score+=0
+    elif (heart_rate<=159) :
+        igs2_score+=4
+    else :
+        igs2_score+=7
+    
+    # Systolic BP
+    if (systolic_bp<70):  # heart_rate = 0 if cardiac arrest within past 24h
+        igs2_score+=13
+    elif (systolic_bp<=99) :
+        igs2_score+=5
+    elif (systolic_bp<=199) :
+        igs2_score+=0
+    else :
+        igs2_score+=2
+        
+    # Temperature
+    if (temp<39):
+        igs2_score+=0
+    else:
+        igs2_score+=3
+        
+    # Glasgow coma score
+    if (glasgow_coma_score<6):
+        igs2_score+=26
+    elif(glasgow_coma_score<=8) :
+        igs2_score+=13   
+    elif(glasgow_coma_score<=10) :
+        igs2_score+=7
+    elif(glasgow_coma_score<=13) :
+        igs2_score+=5
+    elif(glasgow_coma_score<=15) :
+        igs2_score+=0
+    else:
+        raise ValueError('Glasgow coma score should be lower than 15.')
+     
+    # Oxygenation   
+    # PaO2/FIO2(mmHg)
+    if (PaO2DivFIO2<100):  
+        igs2_score+=11
+    elif (PaO2DivFIO2<=199) :
+        igs2_score+=9
+    else :
+        igs2_score+=6
 
-    return 0
+    
+    
+
+    return igs2_score
 
 def compute_sofa_score(paO2, platelets, bilirubin, map, dopamine, epinephrine, norepinephrine, glasgow_coma_score, creatinine):
     """
