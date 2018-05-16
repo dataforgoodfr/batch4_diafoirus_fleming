@@ -1,6 +1,5 @@
 # Ignoring credentials
-omop_login.npy
-full_omop_login.npy
+user
 *.pyc
 .DS_Store
 .ipynb_checkpoints
