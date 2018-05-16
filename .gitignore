@@ -1,5 +1,5 @@
 # Ignoring credentials
-user
+user/
 *.pyc
 .DS_Store
 .ipynb_checkpoints
