@@ -3,7 +3,8 @@ import time
 
 import pandas as pd
 
-from fleming_lib.metrics import add_age, add_rolling_avg, add_target
+from fleming_lib.metrics import (add_age, add_rolling_avg, add_target,
+                                 add_super_target)
 from fleming_lib.utils import (add_categories, add_missing_columns,
                                check_length, convert_frac, to_categorical,
                                to_numeric, to_onehot)
@@ -160,12 +161,16 @@ def create_dataset(conn, list_patients, n_patients_per_batch=10,
         df['death_datetime'] = pd.to_datetime(df['death_datetime'])
         df['measurement_datetime'] = pd.to_datetime(df['measurement_datetime'])
 
-        # Add target: 'death' status
+        # Add target: patients' death' status
+        # - relative to the measurement datetime ('target')
+        # - relative to the hospital stay ('super-target')
         df = df.groupby('person_id').apply(add_target)
+        df = df.groupby('person_id').apply(add_super_target)
 
         # Convert to timeseries matrix
         df = df.pivot_table(
-            index=['measurement_datetime', 'target', 'person_id'],
+            index=['measurement_datetime', 'target',
+                   'super_target', 'person_id'],
             columns='measurement_concept_name', values='value_source_value',
             aggfunc='first')
         df.reset_index(inplace=True)
@@ -175,7 +180,7 @@ def create_dataset(conn, list_patients, n_patients_per_batch=10,
         # -------------
         # Convert to numerical
         numerical_variables = [
-            'BP diastolic', 'BP systolic','Body temperature', 'Heart rate',
+            'BP diastolic', 'BP systolic', 'Body temperature', 'Heart rate',
             'Mean blood pressure', 'Glasgow coma scale',
             'Oxygen concentration breathed',
             'Mean pressure Respiratory system airway Calculated',
@@ -232,3 +237,5 @@ def create_dataset(conn, list_patients, n_patients_per_batch=10,
     dataset = dataset.reindex_axis(frame[0].columns, axis=1)
 
     return dataset
+
+

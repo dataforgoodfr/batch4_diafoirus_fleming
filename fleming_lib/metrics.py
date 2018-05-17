@@ -2,6 +2,7 @@
 from datetime import timedelta
 
 import numpy as np
+import pandas as pd
 
 from .utils import convert_frac
 
@@ -101,9 +102,10 @@ def add_target(df, name='target'):
 
     """
     if 'death_datetime' not in df:
-        raise ValueError('Must provide `birth_datetime` to compute age.')
+        raise ValueError('Must provide `birth_datetime` to compute target.')
     if 'measurement_datetime' not in df:
-        raise ValueError('Must provide `measurement_datetime` to compute age.')
+        raise ValueError('Must provide `measurement_datetime` to compute '
+                         'target.')
 
     def compute_target(row):
         """Compute target value."""
@@ -116,3 +118,41 @@ def add_target(df, name='target'):
     df[name] = df.apply(compute_target, axis=1)
 
     return df
+
+
+def add_super_target(df, name='super_target'):
+    """Add super-target (whether the patient is dead at the end of its stay).
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input dataframe.
+    name : str, optional (default='super_target')
+        Name of the 'super-target' column.
+
+    Returns
+    -------
+    df : pd.DataFrame
+        Dataframe with added 'super-target' column.
+
+    """
+    if 'death_datetime' not in df:
+        raise ValueError('Must provide `birth_datetime` to compute '
+                         'super-target.')
+
+    if not _all_nat_check(df['death_datetime']):
+        df[name] = 1
+    else:
+        df[name] = 0
+
+    return df
+
+
+def _all_nat_check(df):
+    """Check if all value are NaN (returns True) or not."""
+    return np.all(pd.isnull(df))
+
+
+def _any_nat_check(df):
+    """Check if any value is NaN (returns True) or not."""
+    return np.any(pd.isnull(df))
