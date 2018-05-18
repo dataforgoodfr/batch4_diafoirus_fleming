@@ -2,9 +2,8 @@
 from datetime import timedelta
 
 import numpy as np
-import pandas as pd
 
-from .utils import convert_frac
+from .utils import convert_frac, _all_nat_check
 
 
 def add_age(df, round_to_dec=1):
@@ -146,13 +145,3 @@ def add_super_target(df, name='super_target'):
         df[name] = 0
 
     return df
-
-
-def _all_nat_check(df):
-    """Check if all value are NaN (returns True) or not."""
-    return np.all(pd.isnull(df))
-
-
-def _any_nat_check(df):
-    """Check if any value is NaN (returns True) or not."""
-    return np.any(pd.isnull(df))

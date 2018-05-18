@@ -237,5 +237,3 @@ def create_dataset(conn, list_patients, n_patients_per_batch=10,
     dataset = dataset.reindex_axis(frame[0].columns, axis=1)
 
     return dataset
-
-

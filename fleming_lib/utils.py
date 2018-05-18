@@ -277,8 +277,53 @@ def check_length(df):
 
 def _check_variables(df, variables):
     """Check if `variables` are contained in input dataframe."""
-    if isinstance(variables, str):
-        variables = [variables]
-    for var in variables:
-        if var not in df:
-            raise ValueError('`{}` not in dataframe.'.format(var))
+    if variables is not None:
+        if isinstance(variables, str):
+            variables = [variables]
+        for var in variables:
+            if var not in df:
+                raise ValueError('`{}` not in dataframe.'.format(var))
+
+
+def _all_nat_check(df):
+    """Check if all value are NaN (returns True) or not."""
+    return np.all(pd.isnull(df))
+
+
+def _any_nat_check(df):
+    """Check if any value is NaN (returns True) or not."""
+    return np.any(pd.isnull(df))
+
+
+def get_nat_columns(df, columns=None):
+    """Get all columns in input dataframe with missing values.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input dataframe.
+    columns : list of str | None
+        List of columns to check.
+        If None, automatically select columns from `df`.
+
+    Returns
+    -------
+    nat_columns : list of str
+        List out columns with missing values
+
+    """
+    # convert to list if one element
+    if columns is None:
+        columns = df.columns
+    else:
+        if isinstance(columns, str):
+            columns = [columns]
+        _check_variables(df, columns)
+
+    nat_columns = []
+
+    for column in columns:
+        if _any_nat_check(df[column]):
+            nat_columns.append(column)
+
+    return nat_columns
