@@ -173,9 +173,9 @@ def compute_sofa_score(paO2, platelets, bilirubin, map, dopamine, epinephrine, n
         sofa_score+=4
         
            
-    if(dopamine>15 or epinephrine > 0.1 or norepinephrine > 0.1):
+    if(dopamine>15):
         sofa_score+=4 
-    elif(dopamine>5 or epinephrine <= 0.1 or norepinephrine <= 0.1):
+    elif(dopamine>5):
         sofa_score+=3
     elif(dopamine<=5):
         sofa_score+=2
