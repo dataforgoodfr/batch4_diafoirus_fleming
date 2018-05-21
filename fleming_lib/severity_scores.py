@@ -130,15 +130,15 @@ def compute_sofa_score(paO2, platelets, bilirubin, map, dopamine, epinephrine, n
     Compute the SOFA score
 
     Args:
-        paO2 (int): 
-        platelets (int):
-        bilirubin (int):
-        map (int): 
-        dopmine (int):
+   paO2 (int): 
+        platelets (int): 3024929
+        bilirubin (int): 3024128
+        map (int): 3027598 (got it from map_bp in Pancarte)
+        dopamine (int): 1337860
         epinephrine (int):
         norepinephrine (int):
-        glasgow-coma_score (int):
-        creatinine (int):
+        glasgow-coma_score (int): 3032652
+        creatinine (int): 3016723 
 
     Returns:
         sofa_score (int): SOFA score 
