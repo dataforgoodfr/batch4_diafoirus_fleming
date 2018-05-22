@@ -125,12 +125,12 @@ def compute_sapsii_score(row):
 
     return igs2_score
 
-def compute_sofa_score(paO2, platelets, bilirubin, map, dopamine, epinephrine, norepinephrine, glasgow_coma_score, creatinine):
+def compute_sofa_score(paO2, platelets, bilirubin, map, dopamine, glasgow_coma_score, creatinine):
     """
     Compute the SOFA score
 
     Args:
-   paO2 (int): 
+        paO2 (int): 
         platelets (int): 3024929
         bilirubin (int): 3024128
         map (int): 3027598 (got it from map_bp in Pancarte)
