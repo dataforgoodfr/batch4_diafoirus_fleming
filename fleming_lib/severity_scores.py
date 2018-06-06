@@ -1,44 +1,48 @@
-#!/usr/bin/env python
-
-'''
-These functions were developped to compute relevant medical descriptors on the MIMIC dataset (OMOP format).
-
-'''
-
-__authors__ = ['François-Guillaume Fernandez', 'Paul Roujanski', 'Dimitri C', 'Jeremy Desir', 'Julien Gaillet', 'Mateo L']
-__license__ = 'MIT License'
-__version__ = '0.1'
-__maintainer__ = 'François-Guillaume Fernandez'
-__status__ = 'Development'
-
+'''Severity Scores'''
 
 import pandas as pd
 import numpy as np
 
 
-def compute_igs2_score(age,heart_rate,systolic_bp,temp,glasgow_coma_score,PaO2DivFIO2):
+def compute_sapsii_score(row):
     """
     
-    NOT FINISHED YET!
-    
-    Compute the IGS-II score
+    Compute the SAPS-II score
 
     Args:
-        Use the worst value for each physiological variable 
-        within the past 24 hours.
+    
+    row (pd.DataFrame) : each column being :
+       
+        #Use the worst value for each physiological variable within the past 24 hours.
+        #Not the case yet !
         
-        age (int): Years
-        heart_rate (int): BPM
-        systolic_bp (int): mmHg
-        temp (int): °C
-        glasgow_coma_score (int): 
-        PaO2DivFIO2 (int) : mmHg
+        'age' (int): Years
+        'heart_rate' (int): BPM
+        'systolic_bp' (int): mmHg
+        'temp' (int): °C
+        'Glasgow coma scale' (int): ?
+        'Oxygen saturation in Arterial blood' or PaO2 (int) : mmHg 
+        'Oxygen concentration breathed' or FIO2 : %
 
     Returns:
         ret1 (type): description
     """
     
+    
+    
     igs2_score = 0 
+    
+    # Components
+    age = row['age']
+    systolic_bp = row ['BP systolic']
+    temp = row['bodyTemperature_C']
+    glasgow_coma_score = row['Glasgow coma scale']
+    #PaO2DivFIO2 = row['Oxygen saturation in Arterial blood']/row['Oxygen concentration breathed']
+    #....
+    
+    
+    #---------------------------
+    
     # Age (Years)
     if (age<40): 
         igs2_score+=0
@@ -53,18 +57,12 @@ def compute_igs2_score(age,heart_rate,systolic_bp,temp,glasgow_coma_score,PaO2Di
     else:
         igs2_score+=18
         
+        
     # Vitals   
-    # Heart Rate
-    if (heart_rate<40):  # heart_rate = 0 if cardiac arrest within past 24h
-        igs2_score+=11
-    elif (heart_rate<=69) :
-        igs2_score+=2
-    elif (heart_rate<=119) :
-        igs2_score+=0
-    elif (heart_rate<=159) :
-        igs2_score+=4
-    else :
-        igs2_score+=7
+    # ----------
+    
+    # Heart rate 
+    
     
     # Systolic BP
     if (systolic_bp<70):  # heart_rate = 0 if cardiac arrest within past 24h
@@ -91,39 +89,56 @@ def compute_igs2_score(age,heart_rate,systolic_bp,temp,glasgow_coma_score,PaO2Di
         igs2_score+=7
     elif(glasgow_coma_score<=13) :
         igs2_score+=5
-    elif(glasgow_coma_score<=15) :
-        igs2_score+=0
     else:
-        raise ValueError('Glasgow coma score should be lower than 15.')
-     
-    # Oxygenation   
+        igs2_score+=0
+    #elif(glasgow_coma_score<=15) :
+    #    igs2_score+=0
+    #else:
+    #    raise ValueError('Glasgow coma score should be lower than 15.')
+    
+    
+    # Oxygenation 
+    # ----------
+    
     # PaO2/FIO2(mmHg)
+    '''
     if (PaO2DivFIO2<100):  
         igs2_score+=11
     elif (PaO2DivFIO2<=199) :
         igs2_score+=9
     else :
         igs2_score+=6
+    '''    
+
+    
+    # Chemistry  
+    # ----------
+    
+    
+    # Chronic diseases and Admission type
+    # ----------
+    
+        
 
     
     
 
     return igs2_score
 
-def compute_sofa_score(paO2, platelets, bilirubin, map, dopamine, epinephrine, norepinephrine, glasgow_coma_score, creatinine):
+def compute_sofa_score(paO2, platelets, bilirubin, map, dopamine, glasgow_coma_score, creatinine):
     """
     Compute the SOFA score
 
     Args:
         paO2 (int): 
-        platelets (int):
-        bilirubin (int):
-        map (int): 
-        dopmine (int):
+        platelets (int): 3024929
+        bilirubin (int): 3024128
+        map (int): 3027598 (got it from map_bp in Pancarte)
+        dopamine (int): 1337860
         epinephrine (int):
         norepinephrine (int):
-        glasgow-coma_score (int):
-        creatinine (int):
+        glasgow-coma_score (int): 3032652
+        creatinine (int): 3016723 
 
     Returns:
         sofa_score (int): SOFA score 
@@ -158,9 +173,9 @@ def compute_sofa_score(paO2, platelets, bilirubin, map, dopamine, epinephrine, n
         sofa_score+=4
         
            
-    if(dopamine>15 or epinephrine > 0.1 or norepinephrine > 0.1):
+    if(dopamine>15):
         sofa_score+=4 
-    elif(dopamine>5 or epinephrine <= 0.1 or norepinephrine <= 0.1):
+    elif(dopamine>5):
         sofa_score+=3
     elif(dopamine<=5):
         sofa_score+=2
