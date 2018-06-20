@@ -12,11 +12,9 @@ def get_userpaths(userconfig_file='userconfig.yml'):
                      userconfig_file))
     if not os.path.isfile(file):
         raise ValueError('File {} does not exist.'.format(file))
-
     with open(file) as f:
         userpaths = yaml.load(f)['USERPATHS']
-
-    return userpaths
+    return userpaths 
 
 
 def add_userpath(userpaths=[]):

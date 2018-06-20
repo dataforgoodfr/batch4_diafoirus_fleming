@@ -23,9 +23,14 @@ def compute_sapsii_score(row):
         'Glasgow coma scale' (int): ?
         'Oxygen saturation in Arterial blood' or PaO2 (int) : mmHg 
         'Oxygen concentration breathed' or FIO2 : %
+        
+        'Sodium serum/plasma' (float): mEq/L
+        'Potassium serum/plasma' (float) : mEq/L
+        'Total Bilirubin serum/plasma' (float) : mg/dL
+        'Leukocytes [#/volume] in Blood by Manual count'
 
     Returns:
-        ret1 (type): description
+        igs2_score (int): score
     """
     
     
@@ -37,9 +42,15 @@ def compute_sapsii_score(row):
     systolic_bp = row ['BP systolic']
     temp = row['bodyTemperature_C']
     glasgow_coma_score = row['Glasgow coma scale']
-    #PaO2DivFIO2 = row['Oxygen saturation in Arterial blood']/row['Oxygen concentration breathed']
-    #....
-    
+    PaO2 = row['Oxygen saturation in Arterial blood']
+    FIO2 = row['Oxygen concentration breathed']
+    PaO2DivFIO2 = PaO2/FIO2
+    natremie = row['Sodium serum/plasma']
+    kaliemie = row['Potassium serum/plasma']
+    bilirubin = 10*row['Total Bilirubin serum/plasma'] # convert to mg/L (as in http://www.sfar.org/scores/igs2_expanded.php)
+    leukocytes = row['Leukocytes [#/volume] in Blood by Manual count']
+
+    #TODO : Replace each "if ():" by "if .. is null (Nan) : then null"
     
     #---------------------------
     
@@ -101,20 +112,58 @@ def compute_sapsii_score(row):
     # ----------
     
     # PaO2/FIO2(mmHg)
-    '''
+
     if (PaO2DivFIO2<100):  
         igs2_score+=11
     elif (PaO2DivFIO2<=199) :
         igs2_score+=9
     else :
         igs2_score+=6
-    '''    
-
+        
+    
     
     # Chemistry  
     # ----------
     
+    # sodium serum/plasma (en) | natremie (fr)
+    if (natremie<125):  
+        igs2_score+=5
+    elif (natremie<=144) :
+        igs2_score+=0
+    else :
+        igs2_score+=1
     
+    
+    # potassium serum/plasma (en) | kaliemie (fr)
+    if (kaliemie<3):  
+        igs2_score+=3
+    elif (kaliemie<=4.9) :
+        igs2_score+=0
+    else :
+        igs2_score+=3
+        
+    # bilirubin 
+    if (bilirubin<40):  
+        igs2_score+=0
+    elif (bilirubin<60) :
+        igs2_score+=4
+    else :
+        igs2_score+=9
+        
+    """    
+        
+    # Hemato 
+    # ----------
+    
+    # Leukocytes
+    if (leukocytes>=20):  
+        igs2_score+=3
+    elif (leukocytes > 1.0) :
+        igs2_score+=0
+    else :
+        igs2_score+=12
+        
+        
     # Chronic diseases and Admission type
     # ----------
     
