@@ -42,11 +42,9 @@ def compute_sapsii_score(row):
     systolic_bp = row ['BP systolic']
     temp = row['bodyTemperature_C']
     glasgow_coma_score = row['Glasgow coma scale']
-    
     PaO2 = row['Oxygen saturation in Arterial blood']
     FIO2 = row['Oxygen concentration breathed']
     PaO2DivFIO2 = PaO2/FIO2
-    
     natremie = row['Sodium serum/plasma']
     kaliemie = row['Potassium serum/plasma']
     bilirubin = 10*row['Total Bilirubin serum/plasma'] # convert to mg/L (as in http://www.sfar.org/scores/igs2_expanded.php)
@@ -151,7 +149,9 @@ def compute_sapsii_score(row):
         igs2_score+=4
     else :
         igs2_score+=9
-  
+        
+       
+        
     # Hemato 
     # ----------
     
@@ -237,7 +237,33 @@ def compute_sofa_score(row):
             sofa_score+=2
         elif(bilirubin>=20):
             sofa_score+=1
-            
+    
+    if 'Glasgow coma scale' in row:
+
+        glasgow_coma_score=row['Glasgow coma scale']    
+
+        if(glasgow_coma_score<6):
+            sofa_score+=4 
+        elif(glasgow_coma_score<9):
+            sofa_score+=3
+        elif(glasgow_coma_score<12):
+            sofa_score+=2
+        elif(glasgow_coma_score<14):
+            sofa_score+=1
+    
+
+    if 'Creatinine serum/plasma' in row:
+
+        creatinine=row['Creatinine serum/plasma']    
+
+        if(creatinine>50):
+            sofa_score+=4 
+        elif(creatinine <49):
+            sofa_score+=3
+        elif(creatinine <34):
+            sofa_score+=2
+        elif(creatinine <=19):
+            sofa_score+=1        
 
     if 'Dopamine' in row:
 
@@ -281,33 +307,134 @@ def compute_sofa_score(row):
         if(mbp<70):
             sofa_score+=1
 
-    if 'Glasgow coma scale' in row:
-
-        glasgow_coma_score=row['Glasgow coma scale']    
-
-        if(glasgow_coma_score<6):
-            sofa_score+=4 
-        elif(glasgow_coma_score>=6 and glasgow_coma_score<=9):
-            sofa_score+=3
-        elif(glasgow_coma_score>=10 and glasgow_coma_score<=12):
-            sofa_score+=2
-        elif(glasgow_coma_score>=13 and glasgow_coma_score<=14):
-            sofa_score+=1
     
-
-    if 'Creatinine serum/plasma' in row:
-
-        creatinine=row['Creatinine serum/plasma']    
-
-        if(creatinine>50):
-            sofa_score+=4 
-        elif(creatinine>=35 and creatinine <=49):
-            sofa_score+=3
-        elif(creatinine>=20 and creatinine <=34):
-            sofa_score+=2
-        elif(creatinine>=12 and creatinine <=19):
-            sofa_score+=1
 
     
 
     return sofa_score
+
+
+def compute_Lsofa_score(row):
+    """
+    Compute the linearized SOFA score
+
+    Args:
+        #measurement                concept_id
+        paO2/FiO2 (float):          4233883 
+        platelets (float):          3024929
+        bilirubin (float):          3024128
+        map (float):                3027598         
+        glasgow-coma_score (float): 3032652
+        creatinine (float):         3016723 
+
+        #drugs
+        dopamine (float):           1337860
+        epinephrine (float):        1343916 / 1344056
+        norepinephrine (float):     1321341 / 1321364
+        dobutamine (float):         1337720
+
+    Returns:
+        Lsofa_score (int): Linearized SOFA score 
+    """
+   
+    Lsofa_score = 0 
+
+    if 'Oxygen saturation in Arterial blood' in row:
+
+        paO2FiO2= row['Oxygen saturation in Arterial blood']
+    
+        if(paO2FiO2<400):
+            Lsofa_score += -0.01*paO2FiO2+4
+
+    if 'Platelets [#/volume] in Blood by Automated count' in row:
+
+        platelets=row['Platelets [#/volume] in Blood by Automated count']
+
+        if(platelets<20):
+            Lsofa_score+=-0.05*platelets+4
+        elif(platelets<50):
+            Lsofa_score+=-platelets/30+11/3
+        elif(platelets<150):
+            Lsofa_score+=-0.02*platelets+3  
+
+    if 'Total Bilirubin serum/plasma' in row:
+
+        bilirubin=row['Total Bilirubin serum/plasma']
+        
+        if(bilirubin<20):
+            Lsofa_score+=-0.05*bilirubin+4
+        elif(bilirubin<33):
+            Lsofa_score+=-bilirubin/13+59/13
+        elif(bilirubin<102):
+            Lsofa_score+=-bilirubin/69+57/23 
+        elif(bilirubin<204):
+            Lsofa_score+=-bilirubin/102+2 
+            
+    if 'Glasgow coma scale' in row:
+
+        if(glasgow_coma_score<6):
+            Lsofa_score+=-glasgow_coma_score/6+4
+        elif(glasgow_coma_score<12):
+            Lsofa_score+=-glasgow_coma_score/3+5
+        elif(glasgow_coma_score<14):
+            Lsofa_score+=-glasgow_coma_score/2+7
+            
+    if 'Creatinine serum/plasma' in row:
+
+        creatinine=row['Creatinine serum/plasma']    
+
+        if(creatinine<=19):
+            Lsofa_score+=creatinine/19+1
+        elif(creatinine<=49):
+            Lsofa_score+=creatinine/15+11/15
+        elif(creatinine>=50):
+            Lsofa_score+=4
+            
+            
+
+    if 'Dopamine' in row:
+
+        dopamine=row['Dopamine']      
+
+        if(dopamine>15):
+            Lsofa_score+=4 
+        elif(dopamine>5):
+            Lsofa_score+=3
+        elif(dopamine<=5):
+            Lsofa_score+=2
+    elif 'Norepinephrine' in row:
+
+        norepinephrine=row['Norepinephrine']
+
+        if(norepinephrine>0.1):
+            Lsofa_score+=4
+        else:
+            Lsofa_score+=3
+
+    elif 'Epinephrine' in row:
+
+        epinephrine=row['Epinephrine']
+
+        if(epinephrine>0.1):
+            Lsofa_score+=4
+        else:
+            Lsofa_score+=3
+
+    elif 'Dobutamine' in row:
+
+        dobutamine=row['Dobutamine']
+
+        if(dobutamine>0):
+            Lsofa_score+=2
+
+    elif 'Mean blood pressure' in row:
+
+        mbp=row['Mean blood pressure']
+
+        if(mbp<70):
+            Lsofa_score+=1
+
+
+    
+
+    return Lsofa_score
