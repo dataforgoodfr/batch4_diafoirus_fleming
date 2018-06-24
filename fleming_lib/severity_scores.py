@@ -42,9 +42,11 @@ def compute_sapsii_score(row):
     systolic_bp = row ['BP systolic']
     temp = row['bodyTemperature_C']
     glasgow_coma_score = row['Glasgow coma scale']
+    
     PaO2 = row['Oxygen saturation in Arterial blood']
     FIO2 = row['Oxygen concentration breathed']
     PaO2DivFIO2 = PaO2/FIO2
+    
     natremie = row['Sodium serum/plasma']
     kaliemie = row['Potassium serum/plasma']
     bilirubin = 10*row['Total Bilirubin serum/plasma'] # convert to mg/L (as in http://www.sfar.org/scores/igs2_expanded.php)
@@ -150,7 +152,7 @@ def compute_sapsii_score(row):
     else :
         igs2_score+=9
         
-    """    
+        
         
     # Hemato 
     # ----------
