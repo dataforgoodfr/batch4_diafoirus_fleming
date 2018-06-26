@@ -159,7 +159,10 @@ def convert_frac(df, variables):
                     elif not denum:
                         tmp = float(num)
                     else:
-                        tmp = float(num) / float(denum)
+                        if not float(denum) == 0.0:
+                            tmp = float(num) / float(denum)
+                        else :
+                            tmp = float('NaN')
                 else:
                     tmp = float(tmp[0])
             return tmp

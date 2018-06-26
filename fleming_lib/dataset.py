@@ -141,7 +141,15 @@ def create_dataset(conn, list_patients, n_patients_per_batch=10,
              3020891,   -- temperature
              3016502,   -- spo2
              3020716,   -- fio2
-             3032652    -- glasgow coma scale
+             3032652,   -- glasgow coma scale
+             
+             -- chemicals
+             3019550,   -- sodium serum/plasma (en) | natremie (fr)
+             3023103,   -- potassium serum/plasma (en) | kaliemie (fr)
+             3024128,   -- bilirubin
+             
+             -- hemato
+             3003282    -- Leukocytes [#/volume] in Blood by Manual count
             )
         and {}
         order by measurement_datetime
@@ -184,7 +192,10 @@ def create_dataset(conn, list_patients, n_patients_per_batch=10,
             'Mean blood pressure', 'Glasgow coma scale',
             'Oxygen concentration breathed',
             'Mean pressure Respiratory system airway Calculated',
-            'Oxygen saturation in Arterial blood', 'Respiratory rate']
+            'Oxygen saturation in Arterial blood', 'Respiratory rate',
+            'Leukocytes [#/volume] in Blood by Manual count',
+            'Potassium serum/plasma', 'Sodium serum/plasma', 'Total Bilirubin serum/plasma'
+        ]
 
         df = add_missing_columns(df, numerical_variables)
 

@@ -45,8 +45,11 @@ def compute_sapsii_score(row):
     
     PaO2 = row['Oxygen saturation in Arterial blood']
     FIO2 = row['Oxygen concentration breathed']
-    PaO2DivFIO2 = PaO2/FIO2
-    
+    if pd.isna(FIO2) or FIO2==0.0:
+        PaO2DivFIO2 ='NaN'
+    else: 
+        PaO2DivFIO2 = PaO2/FIO2
+        
     natremie = row['Sodium serum/plasma']
     kaliemie = row['Potassium serum/plasma']
     bilirubin = 10*row['Total Bilirubin serum/plasma'] # convert to mg/L (as in http://www.sfar.org/scores/igs2_expanded.php)
@@ -115,12 +118,15 @@ def compute_sapsii_score(row):
     
     # PaO2/FIO2(mmHg)
 
-    if (PaO2DivFIO2<100):  
-        igs2_score+=11
-    elif (PaO2DivFIO2<=199) :
-        igs2_score+=9
-    else :
-        igs2_score+=6
+    if (type(PaO2DivFIO2) == str):
+        igs2_score+=0
+    else:
+        if (PaO2DivFIO2<100):  
+            igs2_score+=11
+        elif (PaO2DivFIO2<=199) :
+            igs2_score+=9
+        else :
+            igs2_score+=6
         
     
     
@@ -137,12 +143,16 @@ def compute_sapsii_score(row):
     
     
     # potassium serum/plasma (en) | kaliemie (fr)
-    if (kaliemie<3):  
-        igs2_score+=3
-    elif (kaliemie<=4.9) :
+    
+    if (type(kaliemie) == str):
         igs2_score+=0
-    else :
-        igs2_score+=3
+    else:   
+        if (kaliemie<3):  
+            igs2_score+=3
+        elif (kaliemie<=4.9) :
+            igs2_score+=0
+        else :
+            igs2_score+=3
         
     # bilirubin 
     if (bilirubin<40):  
@@ -156,12 +166,15 @@ def compute_sapsii_score(row):
     # ----------
     
     # Leukocytes
-    if (leukocytes>=20):  
-        igs2_score+=3
-    elif (leukocytes > 1.0) :
+    if type(leukocytes) == str:
         igs2_score+=0
     else :
-        igs2_score+=12
+        if (leukocytes>=20):  
+            igs2_score+=3
+        elif (leukocytes > 1.0) :
+            igs2_score+=0
+        else :
+            igs2_score+=12
         
         
     # Chronic diseases and Admission type
