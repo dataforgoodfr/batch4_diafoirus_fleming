@@ -33,7 +33,7 @@ The main goal of the project is to predict dynamically mortality risk for a give
 - A Comparison of Intensive Care Unit Mortality Prediction Models through the Use of Data Mining Techniques (dec 2011): [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3259558/)
 
 2015
-- Feature Representation for ICU Mortality (dec 2015): [paper](https://arxiv.org/abs/1512.05294)
+- Feature Representation for ICU Mortality (dec 2015): [paper](https://pdfs.semanticscholar.org/6d32/89fa3d795a7f2cc43cd6a49d12eb34ed900a.pdf)
 
 2016
 - Predicting Clinical Events by Combining Static and Dynamic Information Using Recurrent Neural Networks (feb 2016): [paper](https://arxiv.org/abs/1602.02685)
