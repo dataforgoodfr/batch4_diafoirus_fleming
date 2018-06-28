@@ -59,6 +59,7 @@ The main goal of the project is to predict dynamically mortality risk for a give
 - Scalable and accurate deep learning for electronic health records (jan 2018): [paper](https://arxiv.org/abs/1801.07860)
 - An Empirical Evaluation of Deep Learning for ICD-9 Code Assignment using MIMIC-III Clinical Notes (feb 2018): [paper](https://arxiv.org/abs/1802.02311)
 - Deep Representation for Patient Visits from Electronic Health Records (march 2018): [paper](https://arxiv.org/abs/1803.09533)
+- Memoire de stage - Prédiction mortalité sous 24h (https://www.researchgate.net/publication/325484454_L'apprentissage_profond_sur_MIMIC-III_Prediction_de_la_mortalite_sous_24_h)
 
 **Lectures**
 - MIT 6.S897: Machine Learning for Healthcare [link](https://mlhc17mit.github.io/)
