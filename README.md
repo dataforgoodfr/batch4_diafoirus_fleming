@@ -32,6 +32,9 @@ The main goal of the project is to predict dynamically mortality risk for a give
 2011
 - A Comparison of Intensive Care Unit Mortality Prediction Models through the Use of Data Mining Techniques (dec 2011): [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3259558/)
 
+2015
+- Feature Representation for ICU Mortality (dec 2015): [paper](https://arxiv.org/abs/1512.05294)
+
 2016
 - Predicting Clinical Events by Combining Static and Dynamic Information Using Recurrent Neural Networks (feb 2016): [paper](https://arxiv.org/abs/1602.02685)
 - Predicting ICU Mortality Risk by Grouping Temporal Trends from a Multivariate Panel of Physiologic Measurements  (feb 2016): [paper](https://pdfs.semanticscholar.org/2789/b71bf1e107f07317250519ad70667a10fe4d.pdf)
@@ -59,7 +62,7 @@ The main goal of the project is to predict dynamically mortality risk for a give
 - Scalable and accurate deep learning for electronic health records (jan 2018): [paper](https://arxiv.org/abs/1801.07860)
 - An Empirical Evaluation of Deep Learning for ICD-9 Code Assignment using MIMIC-III Clinical Notes (feb 2018): [paper](https://arxiv.org/abs/1802.02311)
 - Deep Representation for Patient Visits from Electronic Health Records (march 2018): [paper](https://arxiv.org/abs/1803.09533)
-- Memoire de stage - Prédiction mortalité sous 24h (https://www.researchgate.net/publication/325484454_L'apprentissage_profond_sur_MIMIC-III_Prediction_de_la_mortalite_sous_24_h)
+- Memoire de stage - Prédiction mortalité sous 24h: [paper](https://www.researchgate.net/publication/325484454_L'apprentissage_profond_sur_MIMIC-III_Prediction_de_la_mortalite_sous_24_h) 
 
 **Lectures**
 - MIT 6.S897: Machine Learning for Healthcare [link](https://mlhc17mit.github.io/)
